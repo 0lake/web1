@@ -1,22 +1,32 @@
 let selectedX = null; // Переменная для хранения выбранного X
 let tableCreated = false;
 
+// Отправка данных на сервер
 function sendData() {
-    const y = document.getElementById('y').value;
-    const r = document.getElementById('r').value;
+    const x = selectedX; // Используем выбранное значение X
+    const y = parseFloat(document.getElementById('y').value);
+    const r = parseFloat(document.getElementById('r').value);
 
-    if (!validateInput(selectedX, y, r)) {
+    // Проверка на валидность входных данных
+    if (!validateInput(x, y, r)) {
         return;
     }
 
-    const data = JSON.stringify({x: parseFloat(selectedX), y: parseFloat(y), r: parseFloat(r)});
+    const data = JSON.stringify({ x, y, r });
 
     fetch('/fcgi-bin/server.jar', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         body: data
     })
-        .then(response => response.json())
+        .then(response => {
+            if (response.status === 400) {
+                return response.json().then(json => {
+                    throw new Error(json.error);
+                });
+            }
+            return response.json();
+        })
         .then(json => {
             if (!tableCreated) {
                 createTable();
@@ -24,9 +34,14 @@ function sendData() {
             }
             addRow(json);
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('error-message').textContent = error.message;
+            document.getElementById('error-message').style.display = 'block';
+        });
 }
 
+// Создание таблицы для отображения результатов
 function createTable() {
     const resultContainer = document.getElementById('results');
     const table = document.createElement('table');
@@ -44,6 +59,7 @@ function createTable() {
     resultContainer.appendChild(table);
 }
 
+// Добавление строки с результатами в таблицу
 function addRow(json) {
     const resultTable = document.getElementById('resultTable');
 
@@ -58,11 +74,13 @@ function addRow(json) {
     `;
     resultTable.appendChild(newRow);
 
+    // Сохранение результатов в localStorage
     let results = JSON.parse(localStorage.getItem('results')) || [];
     results.push(json);
     localStorage.setItem('results', JSON.stringify(results));
 }
 
+// Валидация входных данных
 function validateInput(x, y, r) {
     const errorMessage = document.getElementById('error-message');
 
@@ -77,6 +95,7 @@ function validateInput(x, y, r) {
     return true;
 }
 
+// Выбор значения X
 function selectX(xValue) {
     const buttons = document.querySelectorAll("#x-buttons button");
 
@@ -97,6 +116,24 @@ function selectX(xValue) {
     }
 }
 
+// Очистка результатов
+function clearResults() {
+    // Удаляем результаты из localStorage
+    localStorage.removeItem('results');
+
+    // Очищаем контейнер результатов
+    const resultsContainer = document.getElementById('results');
+    resultsContainer.innerHTML = ''; // Удаляем все содержимое контейнера
+
+    // Находим таблицу и удаляем её, если она существует
+    const resultTable = document.getElementById('resultTable');
+    if (resultTable) {
+        resultTable.remove();
+        tableCreated = false; // Сбрасываем флаг создания таблицы
+    }
+}
+
+// Рисуем координатную систему
 function drawCoordinateSystem() {
     const canvas = document.getElementById("plotCanvas");
     const ctx = canvas.getContext("2d");
@@ -198,6 +235,7 @@ function drawCoordinateSystem() {
     ctx.fillText("Y", centerX + 10, 20);
 }
 
+// Функция для рисования стрелок
 function drawArrow(ctx, fromX, fromY, toX, toY) {
     const headLength = 10;
     const dx = toX - fromX;
@@ -211,6 +249,7 @@ function drawArrow(ctx, fromX, fromY, toX, toY) {
     ctx.stroke();
 }
 
+// Функция для рисования отметок
 function drawTickMark(ctx, x, y, size) {
     ctx.beginPath();
     ctx.moveTo(x, y - size / 2);
@@ -218,6 +257,7 @@ function drawTickMark(ctx, x, y, size) {
     ctx.stroke();
 }
 
+// Загрузка результатов из localStorage
 function loadResults() {
     const results = JSON.parse(localStorage.getItem('results')) || [];
     if (results.length > 0) {
@@ -227,6 +267,7 @@ function loadResults() {
     }
 }
 
+// Инициализация страницы
 window.onload = function() {
     drawCoordinateSystem();
     loadResults();

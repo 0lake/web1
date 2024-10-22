@@ -1,15 +1,14 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FastCGI Server Point Checker</title>
-    <!-- Link to Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-    <!-- Link to external CSS -->
     <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body onload="drawCoordinateSystem()">
 <div id="header">
     Student Name: Садовников Олег Юрьевич |
     Group:  P3225 |
@@ -21,27 +20,28 @@
             <div class="input-field">
                 <label>X Coordinate:</label>
                 <div id="x-buttons">
-                    <button onclick="selectX(-2)">-2</button>
-                    <button onclick="selectX(-1.5)">-1.5</button>
-                    <button onclick="selectX(-1)">-1</button>
-                    <button onclick="selectX(-0.5)">-0.5</button>
-                    <button onclick="selectX(0)">0</button>
-                    <button onclick="selectX(0.5)">0.5</button>
-                    <button onclick="selectX(1)">1</button>
-                    <button onclick="selectX(1.5)">1.5</button>
-                    <button onclick="selectX(2)">2</button>
+                    <button type="button" onclick="selectX(-2)">-2</button>
+                    <button type="button" onclick="selectX(-1.5)">-1.5</button>
+                    <button type="button" onclick="selectX(-1)">-1</button>
+                    <button type="button" onclick="selectX(-0.5)">-0.5</button>
+                    <button type="button" onclick="selectX(0)">0</button>
+                    <button type="button" onclick="selectX(0.5)">0.5</button>
+                    <button type="button" onclick="selectX(1)">1</button>
+                    <button type="button" onclick="selectX(1.5)">1.5</button>
+                    <button type="button" onclick="selectX(2)">2</button>
                 </div>
                 <input type="hidden" id="x" name="x" required>
             </div>
             <div class="input-field">
-                <label for="y">Y Coordinate:</label>
-                <input type="text" id="y" name="y" min="-3" max="3" required>
+                <label for="y">Y Coordinate (-3...3):</label>
+                <input type="number" id="y" name="y" min="-3" max="3" required>
             </div>
             <div class="input-field">
                 <label for="r">R Value (1-4):</label>
-                <input type="text" id="r" name="r" min="1" max="5" required>
+                <input type="number" id="r" name="r" min="1" max="4" required>
             </div>
             <button type="button" onclick="sendData()">Check</button>
+            <button type="button" onclick="clearResults()">Clear</button>
             <div id="error-message" style="color: #ff0073; display: none;">Error: Invalid input</div>
         </form>
     </div>
@@ -49,25 +49,7 @@
         <canvas id="plotCanvas"></canvas>
     </div>
 </div>
-
-<!-- блок для таблицы результатов -->
-<div class="results-container">
-    <table id="resultsTable">
-        <thead>
-        <tr>
-            <th>X</th>
-            <th>Y</th>
-            <th>R</th>
-            <th>Результат</th>
-            <th>Текущее время</th>
-            <th>Время выполнения</th>
-        </tr>
-        </thead>
-        <tbody>
-        <!-- Результаты будут динамически добавляться сюда -->
-        </tbody>
-    </table>
-</div>
+<div id="results"></div>
 
 <script src="scripts.js"></script>
 </body>

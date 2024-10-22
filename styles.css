@@ -10,7 +10,7 @@
 #plotCanvas {
     width: 500px;
     display: block;
-    margin: 0 auto; /* Centers the canvas horizontally */
+    margin: 0 auto;
 }
 body {
     font-family: 'Montserrat', sans-serif;
@@ -48,7 +48,6 @@ input[type="text"] {
 
 
 
-/* Унаследованное свойство (цвет фона текста наследуется от body) */
 #header {
     background-color: var(--primary-color);
     color: inherit; /* Наследование от родителя */
@@ -97,28 +96,28 @@ input[type="text"] {
 }
 
 .input-field {
-    margin-bottom: 2%; /* Задаем отступ в процентах */
+    margin-bottom: 2%;
 }
 
 .input-field label {
     display: block;
     font-weight: 700;
-    margin-bottom: 2%; /* Задаем отступ в процентах */
+    margin-bottom: 2%;
 }
 
 .input-field input {
     width: 80%;
-    padding: 1%; /* Задаем отступ в процентах */
+    padding: 1%;
     border: 1px solid #ccc;
     border-radius: var(--border-radius);
     font-size: 16px;
     transition: border-color var(--transition-speed);
-    box-sizing: border-box; /* Учитывает padding и border в ширине */
+    box-sizing: border-box;
 }
 
 input[type="number"] {
     border: 2px solid #ccc;
-    padding: 1%; /* Задаем отступ в процентах */
+    padding: 1%;
 }
 
 /* Кнопка с плавным изменением фона при наведении */
@@ -182,7 +181,7 @@ tr:hover {
 }
 
 #error-message {
-    margin-top: 2%; /* Задаем отступ в процентах */
+    margin-top: 2%;
     font-size: 14px;
 }
 /* Стили для контейнера с таблицей */
@@ -195,6 +194,6 @@ tr:hover {
 }
 
 button.selected {
-    background-color: rgba(74, 151, 75, 0.95); /* Example color for selected state */
+    background-color: rgba(74, 151, 75, 0.95);
     color: #82c2e6;
 }
